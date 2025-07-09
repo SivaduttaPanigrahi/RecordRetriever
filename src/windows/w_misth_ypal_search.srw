@@ -21,86 +21,73 @@ end prototypes
 
 protected function string of_createwhere ();string	ls_where
 
-string	lstring
-long		llong	
+string ls_where
+string lstring
+long llong
 
+// Using the custom function for filters
+lstring = dw.object.surname[1]
+ls_where += of_customfilter("surname", lstring, "LIKE")
 
-	lstring = dw.object.surname[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND surname LIKE ~~'" + lstring + "%~~'"
-	end if
-	
+lstring = dw.object.name[1]
+ls_where += of_customfilter("name", lstring, "LIKE")
 
-	lstring = dw.object.name[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND name LIKE ~~'" + lstring + "%~~'"
-	end if
-	
+lstring = dw.object.fathername[1]
+ls_where += of_customfilter("fathername", lstring, "LIKE")
 
-	lstring = dw.object.fathername[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND fathername LIKE ~~'" + lstring + "%~~'"
-	end if
-	
+lstring = dw.object.sex[1]
+ls_where += of_customfilter("sex", lstring, "=")
 
-	lstring = dw.object.sex[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND sex = ~~'" + lstring + "~~'"
-	end if
-	
+lstring = dw.object.kodtmima[1]
+ls_where += of_customfilter("kodtmima", lstring, "=")
 
-	lstring = dw.object.kodtmima[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND kodtmima = ~~'" + lstring + "~~'"
-	end if
-	
+lstring = dw.object.kodidikot[1]
+ls_where += of_customfilter("kodidikot", lstring, "=")
 
-	lstring = dw.object.kodidikot[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND kodidikot = ~~'" + lstring + "~~'"
-	end if	
-	
+lstring = dw.object.mitroo[1]
+ls_where += of_customfilter("mitroo", lstring, "=")
 
-	lstring = dw.object.mitroo[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND mitroo = ~~'" + lstring + "~~'"
-	end if	
-	
+lstring = dw.object.adt[1]
+ls_where += of_customfilter("adt", lstring, "=")
 
-	lstring = dw.object.adt[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND adt = ~~'" + lstring + "~~'"
-	end if		
-	
+lstring = dw.object.afm[1]
+ls_where += of_customfilter("afm", lstring, "=")
 
-	lstring = dw.object.afm[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND afm = ~~'" + lstring + "~~'"
-	end if	
-	
+llong = dw.object.klimakio[1]
+if not isnull(llong) then
+    ls_where = ls_where + " AND klimakio = " + string(llong)
+end if
 
-	llong = dw.object.klimakio[1]
-	if not isnull(llong) then
-		ls_where = ls_where + " AND klimakio = " + string(llong)
-	end if	
+lstring = dw.object.klados[1]
+ls_where += of_customfilter("klados", lstring, "=")
 
-
-	lstring = dw.object.klados[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND klados = ~~'" + lstring + "~~'"
-	end if		
-	
-
-	lstring = dw.object.bathmos[1]
-	if not isnull(lstring) and lstring <> "" then
-		ls_where = ls_where + " AND bathmos = ~~'" + lstring + "~~'"
-	end if			
+lstring = dw.object.bathmos[1]
+ls_where += of_customfilter("bathmos", lstring, "=")
 
 return ls_where
 
 
 
 end function
+
+protected function string of_customfilter (string as_column, string as_value, string as_operator)
+string ls_filter
+
+// Check if the value is not null and not empty
+if not isnull(as_value) and as_value <> "" then
+    // Handle the "LIKE" operator separately to include wildcard
+    if as_operator = "LIKE" then
+        ls_filter = " AND " + as_column + " " + as_operator + " ~~'" + as_value + "%~~'"
+    else
+        // For other operators like "="
+        ls_filter = " AND " + as_column + " " + as_operator + " ~~'" + as_value + "~~'"
+    end if
+end if
+
+// Return the generated filter string
+return ls_filter
+end function
+
 
 on w_misth_ypal_search.create
 int iCurrent
